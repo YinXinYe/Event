@@ -2,14 +2,20 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-class Event {
+public class Event {
+
+    Scanner scanner = new Scanner(System.in);
+    public final static int capacity = 10_000;
+
+
     private String eventID;
     private String eventName;
     private String eventVenue;
     private LocalDate eventDate;
-    private ArrayList<String> eventAttendees;
+    ArrayList<Attendee> eventAttendees = new ArrayList<>();
 
-    // Constructor to initialize the Event object
+    public Event(){};
+
     public Event(String id, String name, String venue, LocalDate date) {
         this.eventID = id;
         this.eventName = name;
@@ -18,13 +24,13 @@ class Event {
         this.eventAttendees = new ArrayList<>();
     }
 
-    // Getters and Setters
+
     public String getEventID() {
         return eventID;
     }
 
-    public void setEventID(String eventID) {
-        this.eventID = eventID;
+    public void setEventID(String id) {
+        this.eventID = id;
     }
 
     public String getEventName() {
@@ -39,8 +45,8 @@ class Event {
         return eventVenue;
     }
 
-    public void setEventVenue(String eventVenue) {
-        this.eventVenue = eventVenue;
+    public void setEventVenue(String venue) {
+        this.eventVenue = venue;
     }
 
     public LocalDate getEventDate() {
@@ -51,91 +57,149 @@ class Event {
         this.eventDate = eventDate;
     }
 
-    public ArrayList<String> getEventAttendees() {
+    public ArrayList<Attendee> getEventAttendees() {
         return eventAttendees;
     }
 
-    // Methods for handling attendees
-    public void addAttendee(String attendeeName) {
+    public void addAttendee(Attendee attendeeName) {
         eventAttendees.add(attendeeName);
     }
 
-    public boolean removeAttendee(String attendeeName) {
+    public boolean removeAttendee(Attendee attendeeName) {
         return eventAttendees.remove(attendeeName);
     }
 
-    public void updateAttendee(String oldName, String newName) {
-        int index = eventAttendees.indexOf(oldName);
-        if (index != -1) {
-            eventAttendees.set(index, newName);
+    public boolean updateAttendee(Attendee attendeeToUpdate) {
+        for (int i = 0; i < eventAttendees.size(); i++) {
+            if (eventAttendees.get(i).equals(attendeeToUpdate)) {
+                eventAttendees.get(i).setName(attendeeToUpdate.getName());
+                eventAttendees.get(i).setGender(attendeeToUpdate.getGender());
+                eventAttendees.get(i).setEmail(attendeeToUpdate.getEmail());
+                eventAttendees.get(i).setAge(attendeeToUpdate.getAge());
+                return true;
+            }
         }
+        return false;
     }
 
-    public boolean findAttendee(String attendeeName) {
+    public boolean findAttendee(Attendee attendeeName) {
         return eventAttendees.contains(attendeeName);
     }
 
-    // organizeEvent method
-    public void organizeEvent() {
+       
+
+    public void organizeEvent(int choice) {
         Scanner scanner = new Scanner(System.in);
-
-        // Getting details from the user
-        System.out.println("Enter Event ID:");
-        eventID = scanner.nextLine();
-        System.out.println("Enter Event Name:");
-        eventName = scanner.nextLine();
-        System.out.println("Enter Event Venue:");
-        eventVenue = scanner.nextLine();
-        System.out.println("Enter Event Date in format YYYY-MM-DD:");
-        eventDate = LocalDate.parse(scanner.nextLine());
-
-        // Handling Attendees
-        while (true) {
-            System.out.println("\nChoose an operation on attendees: \n1. Add\n2. Remove\n3. Update\n4. Find\n5. Display Total Count\n6. Finish");
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+    
+        
 
             switch (choice) {
                 case 1:
-                    System.out.println("Enter name of the attendee to add:");
-                    String newAttendee = scanner.nextLine();
-                    addAttendee(newAttendee);
+                    System.out.print("Enter the Event ID: ");
+                    String id = scanner.nextLine();
+                    setEventID(id);
+
+                    System.out.print("Enter the name of the Event: ");
+                    String eventName = scanner.nextLine();
+                    setEventName(eventName);
+
+                    System.out.print("Enter Event Date in format YYYY-MM-DD:");
+                    LocalDate eventDate = LocalDate.parse(scanner.nextLine()); 
+                    setEventDate(eventDate);
+
+                    System.out.print("Enter the event's venue: ");
+                    String venue = scanner.nextLine();
+                    setEventVenue(venue);
                     break;
                 case 2:
-                    System.out.println("Enter name of the attendee to remove:");
-                    String removeAttendee = scanner.nextLine();
-                    removeAttendee(removeAttendee);
+                    System.out.println("How many attendees are coming?: ");
+                    int num = scanner.nextInt();
+                    scanner.nextLine();
+
+                    for(int i=0; i<num ; i++){
+                        System.out.println("Enter the name of the attendee: ");
+                        String name = scanner.nextLine();
+
+                        System.out.println("Enter the gender of the attendee: ");
+                        char gender = scanner.nextLine().charAt(0);
+
+                        System.out.println("Enter the email of the attendee: ");
+                        String email = scanner.nextLine();
+
+                        System.out.println("Enter the age of the attendee: ");
+                        int age = scanner.nextInt();
+                        scanner.nextLine();
+
+                        eventAttendees.add(new Attendee(name, gender, email, age));
+                    }
+                    System.out.println("\n" + "All the attendees were added successfully to the list.");
                     break;
                 case 3:
-                    System.out.println("Enter the old name of the attendee to update:");
-                    String oldName = scanner.nextLine();
-                    System.out.println("Enter the new name:");
-                    String newName = scanner.nextLine();
-                    updateAttendee(oldName, newName);
+                    System.out.println("Enter the name of the attendee to remove: ");
+                    String nameToRemove = scanner.nextLine();
+                    
+                    for(Attendee attendee : eventAttendees){
+                        if(nameToRemove.equals(attendee.getName())){
+                            eventAttendees.remove(attendee);
+                            break;
+                        }
+                    }
+                    System.out.println("\n" + nameToRemove + " removed successfully from the list of attendees. ");
                     break;
                 case 4:
-                    System.out.println("Enter name of the attendee to find:");
-                    String searchAttendee = scanner.nextLine();
-                    if (findAttendee(searchAttendee)) {
-                        System.out.println("The attendee is registered.");
-                    } else {
-                        System.out.println("The attendee is not found.");
+                    System.out.println("Enter the name of the attendee to update: ");
+                    String nameToUpdate = scanner.nextLine();
+
+                   for(Attendee attendee : eventAttendees){
+                    if(nameToUpdate.equals(attendee.getName())){
+                   System.out.println("Enter the new name , or enter null if you don't want to update:");
+                   String newName = scanner.nextLine();
+                   if(!newName.equals("null")){
+                    attendee.setName(newName);
+                   }
+                   
+                  System.out.println("Enter the new age,or enter 0 if you don't want to update:");
+                  int nweAge = scanner.nextInt();
+                  scanner.nextLine();
+                  if(nweAge != 0){
+                    attendee.setAge(nweAge);
+                   }
+
+                  System.out.println("Enter the new email,or enter 0 if you don't want to update:");
+                  String nweEmail = scanner.nextLine();
+                  if(!nweEmail.equals("null")){
+                    attendee.setEmail(nweEmail);
+                   }
+                   break;
+                }
+            }
+                case 5:
+                    System.out.println("Enter name of the attendee to find: ");
+                    String nameToFind = scanner.nextLine();
+                    for(Attendee attendee : eventAttendees){
+                        if(attendee.getName().equals(nameToFind)){
+                            System.out.println(attendee);
+                            break;
+                        }
                     }
                     break;
-                case 5:
-                    System.out.println("Total number of attendees: " + eventAttendees.size());
-                    break;
                 case 6:
-                    return; // Exit the attendee management loop
+                    System.out.println("Here is the list of attendees:" + "\n" + eventAttendees);
+                    break;
+                case 7:
+                    break;
                 default:
                     System.out.println("Invalid choice! Please try again.");
             }
         }
-    }
+    
+    
+
+
 
     @Override
     public String toString() {
-        return "Event{" +
+        return "Attendee{" +
                 "eventID='" + eventID + '\'' +
                 ", eventName='" + eventName + '\'' +
                 ", eventVenue='" + eventVenue + '\'' +
