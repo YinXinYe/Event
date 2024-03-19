@@ -8,20 +8,14 @@ public class Main {
         do{
             System.out.println("\n" + "Here's what you can do in the program" + "\n");
             System.out.println("Type 1 to enter event details:" + "\n");
-            System.out.println("Type 2 to enter attendee details that are coming to the event :" + "\n");
+            System.out.println("Type 2 to enter attendee names that are coming to the event :" + "\n");
             System.out.println("Type 3 to remove an attendee from the list:" + "\n");
             System.out.println("Type 4 to update an attendee in the list:" + "\n");
             System.out.println("Type 5 to search for an attendee in the list:" + "\n");
-            System.out.println("Type 6 to display all the attendees from the event:" + "\n");
-            System.out.println("Type 7 for complementary passes:" + "\n");
-            System.out.println("Type 8 to handle performances:" + "\n");
-            System.out.println("Type 9 to get seating details:" + "\n");
-            System.out.println("Type 10 to Quit:" + "\n");
+            System.out.println("Type 6 to display all the attendees from the event:" + "\n"); 
             choice = reader.nextInt();
             event.organizeEvent(choice);       
-        }while(choice != 10);
-        reader.close();
+        }while(choice != 7);
+    reader.close();
     }
 }
-
-

@@ -1,13 +1,11 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.HashMap;
 
 public class Event {
 
     Scanner scanner = new Scanner(System.in);
-    public final static int capacity = 200;
-    HashMap<String, Attendee> seatDetails = new HashMap<>(capacity, 0.6f);
+    public final static int capacity = 10_000;
 
 
     private String eventID;
@@ -24,8 +22,6 @@ public class Event {
         this.eventVenue = venue;
         this.eventDate = date;
         this.eventAttendees = new ArrayList<>();
-        new HandleComplementaryPasses();
-        new HandlePerformances();
     }
 
 
@@ -69,14 +65,6 @@ public class Event {
         eventAttendees.add(attendeeName);
     }
 
-    public void setSeatDetails(String seatNumber, Attendee attendee) {
-        seatDetails.put(seatNumber, attendee);
-    }
-
-    public void getSeatDetails(String seatNumber) {
-        System.out.println("The details for the seat " + seatNumber + " are as follows " + '\n' + seatDetails.get(seatNumber));
-    }
-
     public boolean removeAttendee(Attendee attendeeName) {
         return eventAttendees.remove(attendeeName);
     }
@@ -98,12 +86,13 @@ public class Event {
         return eventAttendees.contains(attendeeName);
     }
 
-   
+       
 
     public void organizeEvent(int choice) {
         Scanner scanner = new Scanner(System.in);
     
-    
+        
+
             switch (choice) {
                 case 1:
                     System.out.print("Enter the Event ID: ");
@@ -122,32 +111,26 @@ public class Event {
                     String venue = scanner.nextLine();
                     setEventVenue(venue);
                     break;
-                    case 2:
+                case 2:
                     System.out.println("How many attendees are coming?: ");
                     int num = scanner.nextInt();
                     scanner.nextLine();
-    
-                    for (int i = 0; i < num; i++) {
+
+                    for(int i=0; i<num ; i++){
                         System.out.println("Enter the name of the attendee: ");
                         String name = scanner.nextLine();
-    
+
                         System.out.println("Enter the gender of the attendee: ");
                         char gender = scanner.nextLine().charAt(0);
-    
+
                         System.out.println("Enter the email of the attendee: ");
                         String email = scanner.nextLine();
-    
+
                         System.out.println("Enter the age of the attendee: ");
                         int age = scanner.nextInt();
                         scanner.nextLine();
-    
-                        System.out.println("Enter the seat number for the attendee: ");
-                        String seatNo = scanner.nextLine();
-    
-                        Attendee attendee = new Attendee(name, gender, email, age, seatNo);
-                        eventAttendees.add(attendee);
-                        seatDetails.put(seatNo, attendee);
-                        setSeatDetails(seatNo, attendee);
+
+                        eventAttendees.add(new Attendee(name, gender, email, age));
                     }
                     System.out.println("\n" + "All the attendees were added successfully to the list.");
                     break;
@@ -203,20 +186,7 @@ public class Event {
                 case 6:
                     System.out.println("Here is the list of attendees:" + "\n" + eventAttendees);
                     break;
-                case 7: 
-                HandleComplementaryPasses handleComplementaryPasses = new HandleComplementaryPasses();
-                handleComplementaryPasses.handleComplementaryPasses();
-                    break;
-                case 8:
-                HandlePerformances handlePerformances = new HandlePerformances();
-                handlePerformances.handlePerformances();
-                    break;
-                case 9:
-                System.out.println("Enter the seat number to find its details: ");
-                String seat = scanner.nextLine();
-                getSeatDetails(seat);
-                    break;
-                case 10:
+                case 7:
                     break;
                 default:
                     System.out.println("Invalid choice! Please try again.");
@@ -224,6 +194,8 @@ public class Event {
         }
     
     
+
+
 
     @Override
     public String toString() {
